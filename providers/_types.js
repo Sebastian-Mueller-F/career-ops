@@ -7,6 +7,9 @@
 // contract is enforced by scan.mjs (id presence, fetch is a function, fetch
 // returns an array), not by these annotations.
 //
+// Prose companion (checklist, mandatory guards, tests): ADDING_A_PROVIDER.md
+// in this directory.
+//
 // Files prefixed with _ are never loaded as providers by scan.mjs.
 
 /**
@@ -18,10 +21,57 @@
  * @property {string} company  May be empty when the source can't expose it
  *                             at the list-page level; populated downstream.
  * @property {string} location May be empty.
+ * @property {string} [description] Job description text, populated ONLY when the
+ *                               provider's list payload carries it for free (no
+ *                               extra per-job request — the scanner is zero-token),
+ *                               or when a board opts into vdab/smartrecruiters-style
+ *                               `fetchDetails` (bounded per-job enrichment, skipped
+ *                               while probing). Lever/Ashby supply it via
+ *                               `descriptionPlain`; most providers omit it.
+ *                               Consumed by scan.mjs's content_filter; an
+ *                               empty/absent value always passes the filter.
+ * @property {number} [postedAt] Epoch ms when the posting was published.
+ *                               Omitted when the source doesn't expose a
+ *                               usable date. scan.mjs ignores it; consumers
+ *                               like scan-ats-full.mjs use it for recency
+ *                               filtering.
+ * @property {{min?: number, max?: number, currency?: string}} [salary]
+ *                               Annualized compensation, attached ONLY when the
+ *                               source exposes real figures — never inferred
+ *                               (`ashby.mjs` is the reference shape; most
+ *                               providers omit it). At least one of `min` / `max`
+ *                               is present; most providers normalize both bounds
+ *                               (filling a one-sided range from the other), but
+ *                               some — e.g. `agentic-jobs.mjs` — leave the absent
+ *                               bound off rather than coerce it. scan.mjs's
+ *                               salary_filter reads `min ?? max` and tolerates
+ *                               either bound alone.
+ *                               `currency` is the source's currency string,
+ *                               upper-cased by most providers (`''` or absent
+ *                               when the source gives none); it is not validated
+ *                               as an ISO code, and the filter compares it
+ *                               case-insensitively. Consumed by scan.mjs's
+ *                               salary_filter and rendered into pipeline.md's
+ *                               compensation column via formatCompensation(); an
+ *                               empty/absent value always passes the filter.
+ * @property {number} [trustScore] 0-100 trust score from _trust-validator.mjs.
+ * @property {string[]} [trustFlags] Flags raised by trust validation (e.g.
+ *                                   'invalid_url', 'suspicious_domain').
+ * @property {'high'|'medium'|'low'} [trustLevel] Classification derived from
+ *                                                 trustScore.
  */
 
 /**
- * A single `tracked_companies` entry from `portals.yml`.
+ * Result returned by the trust validator for a single job posting.
+ *
+ * @typedef {object} TrustResult
+ * @property {number} score       0-100, where 100 = fully trusted.
+ * @property {string[]} flags     Flags raised (e.g. 'invalid_url', 'suspicious_domain').
+ * @property {'high'|'medium'|'low'} level  Classification: 90-100 high, 60-89 medium, 0-59 low.
+ */
+
+/**
+ * A single portal entry from `portals.yml` — `tracked_companies` or `job_boards`.
  *
  * Provider-specific fields are opaque to scan.mjs and validated by the
  * provider itself. Examples in current providers: `api`, `careers_url`.
@@ -32,8 +82,13 @@
  * @property {string}             name             User-facing label; appears in logs and placeholders.
  * @property {boolean}            [enabled]        Default: true.
  * @property {string}             [careers_url]    Public listing URL; consumed by detect().
+ * @property {string}             [api]            JSON API URL; used directly by greenhouse/ashby providers.
  * @property {string}             [provider]       Explicit provider id — bypasses detect().
  * @property {('http')}           [transport]      Default: 'http'. Reserved for future transports.
+ * @property {number}             [max_pages]      Provider-specific pagination cap (avature, workday).
+ * @property {string}             [offset_param]   avature only: pins the pagination query key and disables the
+ *                                                 provider's jobOffset→offset self-heal. Rarely needed — an
+ *                                                 escape hatch for a tenant the auto-switch can't resolve.
  */
 
 /**
@@ -52,6 +107,7 @@
  * @property {Object<string,string>} [headers]
  * @property {string}                [method]
  * @property {(string|null)}         [body]
+ * @property {('error'|'follow'|'manual')} [redirect]
  */
 
 /**
@@ -63,6 +119,18 @@
  * @property {('http')} transport
  * @property {(url: string, opts?: FetchOptions) => Promise<string>}  fetchText
  * @property {(url: string, opts?: FetchOptions) => Promise<unknown>} fetchJson
+ * @property {(url: string, opts?: FetchOptions) => Promise<Response>} fetchResponse  Raw Response (timeout + non-2xx guard applied); for providers needing response headers.
+ * @property {number} [maxPages] Optional pagination hint. When set (verify-portals.mjs's
+ *                              health probe passes 1), a paginating provider SHOULD stop
+ *                              after this many pages — the probe only needs the first page
+ *                              to tell a live board from a broken one, and must not walk an
+ *                              entire careers site. Providers that ignore it stay correct:
+ *                              the probe caps their requests defensively via the context's
+ *                              own fetch functions.
+ * @property {(ms: number) => Promise<void>} [sleep] Optional cross-provider pacing hook used by
+ *                              paginating providers (avature, workday) to throttle between page
+ *                              requests. May be absent — providers fall back to a native
+ *                              `setTimeout`-based delay.
  */
 
 /**
@@ -73,6 +141,12 @@
  * @property {string} id                                                       Unique across all loaded providers.
  * @property {((entry: PortalEntry) => (DetectHit | null))} [detect]           Optional auto-detection.
  * @property {(entry: PortalEntry, ctx: Context) => Promise<Job[]>} fetch      Required.
+ * @property {((job: Job) => (string | null))} [dedupKey]                     Optional. A
+ *   provider-scoped identifier for a job, precise where URL normalization
+ *   isn't — e.g. a Workday requisition ID, so the same posting served under
+ *   several sites of one tenant (different paths/hosts) collapses to one key
+ *   (#3439). Return null when no such key is derivable for a given job;
+ *   callers then fall back to normalizeUrlForDedup(job.url) as before.
  */
 
 export {};

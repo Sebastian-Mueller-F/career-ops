@@ -101,7 +101,7 @@ Bloklar A-F tamamlandıktan sonra **HER ZAMAN** şunları yap:
 
 Değerlendirmenin tamamını `reports/{###}-{sirket-slug}-{YYYY-MM-DD}.md` olarak kaydet.
 
-- `{###}` = sıradaki numara (3 haneli, sıfır dolgulu)
+- `{###}` = sıradaki numara (3 haneli, sıfır dolgulu). Bu numarayı atomik olarak atamak ve yarış durumlarını (race condition) önlemek için, numarayı rezerve etmek üzere `node reserve-report-num.mjs` komutunu çalıştırmalısınız (standart çıktı `{###}` değerini döndürür), raporu yazmalı ve ardından sentineli serbest bırakmak için `node reserve-report-num.mjs --release {###}` komutunu çalıştırmalısınız.
 - `{sirket-slug}` = şirket adı küçük harfle, boşluksuz (tire kullan)
 - `{YYYY-MM-DD}` = bugünün tarihi
 
@@ -139,6 +139,9 @@ Değerlendirmenin tamamını `reports/{###}-{sirket-slug}-{YYYY-MM-DD}.md` olara
 
 ## G) İlan Meşruiyeti
 (Blok G'nin tam içeriği)
+
+## Risk Summary
+(her risk sinyali için bir satır, sabit sıra — yukarıdaki Risk Summary bölümüne bakın)
 
 ## H) Başvuru Formu Taslak Yanıtları
 (yalnızca puan >= 4,5 ise — form alanları için taslak yanıtlar)
@@ -231,6 +234,38 @@ Ardından `node merge-tracker.mjs` çalıştır.
 - **Recruiter kaynağı (kamuya açık ilan yok):** Tazelik sinyali alınamaz. Aktif recruiter temasının kendisinin olumlu bir meşruiyet sinyali olduğunu not et.
 
 ---
+
+## Risk Summary (Blok G'den sonra)
+
+Rapor gövdesini Blok G'nin hemen ardından, Blok H'den önce bir `## Risk Summary` bloğuyla kapatın — her risk sinyali için bir satır, sabit sıra. Böylece adayın gerçekten sorduğu soru ("bu şirkete katılmak güvenli mi?") Blok A, Blok G ve harici bir dosyayı zihinde birleştirmek yerine tek ekranda yanıtlanır.
+
+**Yalnızca toplama, sıfır yeni yargı.** Her satır, kaynak sinyalin zaten ürettiği kararı alıntılar veya ona bağlanır. Özet asla yeniden puanlamaz, yeniden ağırlıklandırmaz veya kararı geçersiz kılmaz — bir satır yanlış görünüyorsa düzeltme buraya değil, kaynak sinyale aittir.
+
+Satır başına üç durum: `✅ {net karar}` / `⚠️ {bulgu}` / `— not evaluated`. **`— not evaluated` birinci sınıf bir durumdur:** bir sinyal çalıştırılamadıysa satırı atlamak yerine bunu açıkça belirtin; ancak o zaman tamamı ✅ olan bir özete güvenilebilir. **Adlandırılmış istisna:** Mülakat kırmızı bayrakları satırı, değerlendirilmemiş durumunu `— no interview sessions yet` olarak yazar — aynı "değerlendirilmedi" kavramının o satıra özgü, daha belirgin ifadesi (çapraz kontrol çalıştı, yalnızca redflags dosyası bulunamadı); dördüncü bir durum değildir.
+
+Satır etiketleri, `| Signal | Status |` başlıkları ve durum sözcükleri sabit literaldir, çevrilmez: Machine Summary'deki `risk_summary` alanı bunlara dayanır.
+
+| Sinyal | Kaynak | Satırın yazımı |
+|--------|--------|----------------|
+| Posting legitimacy | Blok G değerlendirme kademesi | `✅ High Confidence`; Proceed with Caution / Suspicious için `⚠️ {tier} — {tek cümlelik gerekçe}` |
+| Employment classification | Blok G içindeki çalışma biçimi sinyali | Kontrol çalıştı ve bir şey bulunmadıysa `✅ clear`; bayrak tetiklendiyse `⚠️ contractor-style language: "{alıntı ifade}"`; kontrol çalışamadıysa `— not evaluated` |
+| Culture screen | Blok A'daki kültür taraması alanı | `✅ pass` veya `⚠️ caution — {kanıt}` / `⚠️ fail — {kanıt}`; tarama yapılmadıysa `— not evaluated` |
+| Interview red flags | `interview-prep/{company-slug}-redflags.md` (`interview-redflag` modundan) | **Kopya değil, çapraz referans:** dosya varsa mevcut uyarı düzeyini ve göreli bağlantısını yazın — `[{level}](../interview-prep/{company-slug}-redflags.md)` (`reports/` klasörüne göre); yoksa `— no interview sessions yet` |
+| AI claims vs. infrastructure | Blok G'deki AI/altyapı tutarlılık kontrolü (varsa) | Bu rapor kontrolü içeriyorsa kararını yansıtın (`✅ consistent` / `⚠️ {bulgu}`); aksi halde `— not evaluated`. Kontrol var olduğunda satır kendiliğinden etkinleşir, sıralama bağımlılığı yoktur |
+
+Blok biçimi:
+
+```markdown
+## Risk Summary
+
+| Signal | Status |
+|--------|--------|
+| Posting legitimacy | ✅ High Confidence |
+| Employment classification | ⚠️ contractor-style language: "{quoted phrase}" |
+| Culture screen | ⚠️ caution — {evidence} |
+| Interview red flags | — no interview sessions yet |
+| AI claims vs. infrastructure | — not evaluated |
+```
 
 ## Puanlama (1-5 global)
 
