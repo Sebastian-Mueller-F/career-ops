@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="{{LANG}}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{NAME}} — CV</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Jost:wght@300;400;500;600&display=swap');
+
+      /* ── DESIGN TOKENS ────────────────────────────────────────────────────── */
+      :root {
+        --accent:        #C8614A;   /* coral / terracotta — matches PDF headings  */
+        --accent-light:  #f5ede9;   /* sidebar background tint                    */
+        --accent-mid:    #e8c4b8;   /* sidebar rule / divider                     */
+        --text-dark:     #1c1c1c;   /* body text                                  */
+        --text-mid:      #444444;   /* secondary text                             */
+        --text-light:    #777777;   /* dates, locations                           */
+        --sidebar-bg:    #f9f5f3;   /* warm off-white sidebar                     */
+        --sidebar-w:     210px;     /* sidebar column width                       */
+        --page-pad:      28px;      /* outer page padding                         */
+        --section-gap:   18px;      /* gap between sections                       */
+        --font-display:  'Cormorant Garamond', Georgia, serif;
+        --font-body:     'Jost', 'Helvetica Neue', sans-serif;
+      }
+
+      /* ── RESET ────────────────────────────────────────────────────────────── */
+      *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+      html {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      body {
+        font-family: var(--font-body);
+        font-size: 10.5px;
+        line-height: 1.6;
+        color: var(--text-dark);
+        background: #ffffff;
+      }
+
+      /* ── PAGE SHELL ───────────────────────────────────────────────────────── */
+      .page {
+        width: 100%;
+        max-width: {{PAGE_WIDTH}};
+        margin: 0 auto;
+        display: flex;
+        min-height: 100vh;
+      }
+
+      /* ── SIDEBAR ──────────────────────────────────────────────────────────── */
+      .sidebar {
+        width: var(--sidebar-w);
+        min-width: var(--sidebar-w);
+        background: var(--sidebar-bg);
+        padding: var(--page-pad) 18px var(--page-pad) var(--page-pad);
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      /* Photo */
+      .photo-wrap {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        overflow: hidden;
+        border-radius: 4px;
+        margin-bottom: 4px;
+      }
+
+      .photo-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center top;
+        display: block;
+      }
+
+      /* Sidebar section label */
+      .sb-section {
+        margin-bottom: 0;
+      }
+
+      .sb-label {
+        font-family: var(--font-body);
+        font-size: 9px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+        border-bottom: 1px solid var(--accent-mid);
+        padding-bottom: 4px;
+        margin-bottom: 8px;
+      }
+
+      .sb-item {
+        font-size: 10px;
+        line-height: 1.65;
+        color: var(--text-mid);
+      }
+
+      .sb-item strong {
+        color: var(--text-dark);
+        font-weight: 500;
+      }
+
+      .sb-item + .sb-item {
+        margin-top: 2px;
+      }
+
+      /* Skill / personality tags — simple list style matching PDF */
+      .sb-list {
+        list-style: none;
+        padding: 0;
+      }
+
+      .sb-list li {
+        font-size: 10px;
+        color: var(--text-mid);
+        line-height: 1.7;
+        padding-left: 10px;
+        position: relative;
+      }
+
+      .sb-list li::before {
+        content: '–';
+        position: absolute;
+        left: 0;
+        color: var(--accent);
+      }
+
+      /* ── MAIN COLUMN ──────────────────────────────────────────────────────── */
+      .main {
+        flex: 1;
+        padding: var(--page-pad) var(--page-pad) var(--page-pad) 26px;
+        display: flex;
+        flex-direction: column;
+        gap: var(--section-gap);
+      }
+
+      /* ── NAME / HEADLINE ──────────────────────────────────────────────────── */
+      .name-block {
+        margin-bottom: 4px;
+      }
+
+      .cv-name {
+        font-family: var(--font-display);
+        font-size: 36px;
+        font-weight: 300;
+        letter-spacing: 0.01em;
+        color: var(--text-dark);
+        line-height: 1.05;
+        margin-bottom: 4px;
+      }
+
+      .cv-headline {
+        font-size: 10.5px;
+        font-weight: 400;
+        color: var(--text-light);
+        letter-spacing: 0.04em;
+        margin-bottom: 8px;
+      }
+
+      .contact-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 12px;
+        font-size: 10px;
+        color: var(--text-light);
+      }
+
+      .contact-row a {
+        color: var(--text-light);
+        text-decoration: none;
+      }
+
+      /* ── SECTION HEADING ──────────────────────────────────────────────────── */
+      .section { }
+
+      .section-title {
+        font-family: var(--font-body);
+        font-size: 9px;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--accent);
+        border-bottom: 1px solid #e0d6d2;
+        padding-bottom: 4px;
+        margin-bottom: 10px;
+      }
+
+      /* ── SUMMARY ──────────────────────────────────────────────────────────── */
+      .summary-text {
+        font-size: 10.5px;
+        line-height: 1.75;
+        color: var(--text-mid);
+      }
+
+      /* ── JOB ENTRY ────────────────────────────────────────────────────────── */
+      .job {
+        margin-bottom: 12px;
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+
+      .job-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 10px;
+        margin-bottom: 1px;
+      }
+
+      /* Company name — bold, slightly larger, matches PDF */
+      .job-company {
+        font-family: var(--font-body);
+        font-size: 11.5px;
+        font-weight: 600;
+        color: var(--text-dark);
+      }
+
+      .job-period {
+        font-size: 9.5px;
+        color: var(--text-light);
+        white-space: nowrap;
+        font-style: italic;
+      }
+
+      /* Role title — lighter weight, coral accent separator */
+      .job-role {
+        font-size: 10.5px;
+        font-weight: 500;
+        color: var(--accent);
+        margin-bottom: 2px;
+      }
+
+      .job-location {
+        font-size: 9.5px;
+        color: var(--text-light);
+        font-style: italic;
+        margin-bottom: 5px;
+      }
+
+      /* Sub-role inside a parent company (e.g. individual clients under Us Studio) */
+      .sub-job {
+        margin-top: 8px;
+        margin-left: 0;
+        padding-left: 10px;
+        border-left: 2px solid var(--accent-mid);
+      }
+
+      .sub-job-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 10px;
+      }
+
+      .sub-job-company {
+        font-size: 10.5px;
+        font-weight: 600;
+        color: var(--text-dark);
+      }
+
+      .sub-job-period {
+        font-size: 9.5px;
+        color: var(--text-light);
+        white-space: nowrap;
+        font-style: italic;
+      }
+
+      .sub-job-role {
+        font-size: 10px;
+        color: var(--text-mid);
+        font-style: italic;
+        margin-bottom: 4px;
+      }
+
+      .job ul, .sub-job ul {
+        padding-left: 14px;
+        margin-top: 4px;
+      }
+
+      .job li, .sub-job li {
+        font-size: 10px;
+        line-height: 1.65;
+        color: var(--text-mid);
+        margin-bottom: 3px;
+      }
+
+      .job li strong, .sub-job li strong {
+        font-weight: 600;
+        color: var(--text-dark);
+      }
+
+      /* ── EDUCATION ────────────────────────────────────────────────────────── */
+      .edu-item {
+        margin-bottom: 8px;
+        break-inside: avoid;
+      }
+
+      .edu-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 10px;
+      }
+
+      .edu-degree {
+        font-size: 10.5px;
+        font-weight: 600;
+        color: var(--text-dark);
+      }
+
+      .edu-year {
+        font-size: 9.5px;
+        color: var(--text-light);
+        white-space: nowrap;
+        font-style: italic;
+      }
+
+      .edu-institution {
+        font-size: 10px;
+        color: var(--accent);
+        font-weight: 500;
+      }
+
+      .edu-desc {
+        font-size: 9.5px;
+        color: var(--text-light);
+        margin-top: 2px;
+        line-height: 1.5;
+        font-style: italic;
+      }
+
+      /* ── COMPETENCY TAGS ──────────────────────────────────────────────────── */
+      .competencies-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .competency-tag {
+        font-size: 9.5px;
+        font-weight: 500;
+        color: var(--accent);
+        background: var(--accent-light);
+        padding: 3px 9px;
+        border-radius: 2px;
+        border: 1px solid var(--accent-mid);
+      }
+
+      /* ── PROJECTS ─────────────────────────────────────────────────────────── */
+      .project {
+        margin-bottom: 10px;
+        break-inside: avoid;
+      }
+
+      .project-title {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--text-dark);
+      }
+
+      .project-badge {
+        font-size: 8.5px;
+        font-weight: 500;
+        color: var(--accent);
+        background: var(--accent-light);
+        padding: 1px 6px;
+        border-radius: 2px;
+        margin-left: 6px;
+      }
+
+      .project-desc {
+        font-size: 10px;
+        color: var(--text-mid);
+        margin-top: 3px;
+        line-height: 1.6;
+      }
+
+      .project-tech {
+        font-size: 9px;
+        color: var(--text-light);
+        margin-top: 2px;
+      }
+
+      /* ── CERTIFICATIONS ───────────────────────────────────────────────────── */
+      .cert-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 10px;
+        margin-bottom: 5px;
+        break-inside: avoid;
+      }
+
+      .cert-title {
+        font-size: 10px;
+        font-weight: 500;
+        color: var(--text-dark);
+      }
+
+      .cert-org {
+        color: var(--accent);
+      }
+
+      .cert-year {
+        font-size: 9.5px;
+        color: var(--text-light);
+        white-space: nowrap;
+        font-style: italic;
+      }
+
+      /* ── SKILLS GRID ──────────────────────────────────────────────────────── */
+      .skills-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px 14px;
+      }
+
+      .skill-item {
+        font-size: 10px;
+        color: var(--text-mid);
+      }
+
+      .skill-category {
+        font-weight: 600;
+        color: var(--text-dark);
+      }
+
+      /* ── PRINT ────────────────────────────────────────────────────────────── */
+      @media print {
+        body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        .page { min-height: unset; }
+      }
+
+      .avoid-break { break-inside: avoid; page-break-inside: avoid; }
+
+      /* ── LINKS ────────────────────────────────────────────────────────────── */
+      a { color: inherit; text-decoration: none; white-space: nowrap; }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <!-- ═══════════════════════════════════════════════════════════════════ -->
+      <!-- SIDEBAR                                                             -->
+      <!-- ═══════════════════════════════════════════════════════════════════ -->
+      <aside class="sidebar">
+        <!-- PHOTO
+         Place candidate photo as: photo.jpg (or .png) in the project root.
+         The PDF pipeline passes the path via {{PHOTO_PATH}}.
+         If no photo is available, remove the .photo-wrap block entirely.    -->
+        <div class="photo-wrap">
+          <img
+            src="photo.jpg"
+            alt="{{NAME}}"
+            onerror="this.parentElement.style.display = 'none'"
+          />
+        </div>
+
+        <!-- EDUCATION -->
+        <div class="sb-section avoid-break">
+          <div class="sb-label">{{SECTION_EDUCATION}}</div>
+          {{EDUCATION}}
+        </div>
+
+        <!-- LANGUAGES -->
+        <div class="sb-section avoid-break">
+          <div class="sb-label">{{SECTION_LANGUAGES}}</div>
+          {{LANGUAGES}}
+        </div>
+
+        <!-- SKILLS -->
+        <div class="sb-section avoid-break">
+          <div class="sb-label">{{SECTION_SKILLS}}</div>
+          {{SKILLS}}
+        </div>
+
+        <!-- PERSONALITY (optional — remove block if not used) -->
+        <div class="sb-section avoid-break">
+          <div class="sb-label">{{SECTION_PERSONALITY}}</div>
+          {{PERSONALITY}}
+        </div>
+
+        <!-- INTERESTS -->
+        <div class="sb-section avoid-break">
+          <div class="sb-label">{{SECTION_INTERESTS}}</div>
+          {{INTERESTS}}
+        </div>
+      </aside>
+
+      <!-- ═══════════════════════════════════════════════════════════════════ -->
+      <!-- MAIN COLUMN                                                         -->
+      <!-- ═══════════════════════════════════════════════════════════════════ -->
+      <main class="main">
+        <!-- NAME / HEADLINE / CONTACT -->
+        <div class="name-block avoid-break">
+          <div class="cv-name">{{NAME}}</div>
+          <div class="cv-headline">{{HEADLINE}}</div>
+          <div class="contact-row">
+            <span>{{EMAIL}}</span>
+            <span>{{PHONE}}</span>
+            {{PORTFOLIO_LINK}} {{LINKEDIN_LINK}}
+            <span>{{LOCATION}}</span>
+          </div>
+        </div>
+
+        <!-- PROFESSIONAL SUMMARY -->
+        <div class="section avoid-break">
+          <div class="section-title">{{SECTION_SUMMARY}}</div>
+          <div class="summary-text">{{SUMMARY_TEXT}}</div>
+        </div>
+
+        <!-- CORE COMPETENCIES (optional) -->
+        {{#if COMPETENCIES}}
+        <div class="section avoid-break">
+          <div class="section-title">{{SECTION_COMPETENCIES}}</div>
+          <div class="competencies-grid">{{COMPETENCIES}}</div>
+        </div>
+        {{/if}}
+
+        <!-- WORK EXPERIENCE -->
+        <div class="section">
+          <div class="section-title">{{SECTION_EXPERIENCE}}</div>
+          {{EXPERIENCE}}
+        </div>
+
+        <!-- PROJECTS (optional) -->
+        {{#if PROJECTS}}
+        <div class="section avoid-break">
+          <div class="section-title">{{SECTION_PROJECTS}}</div>
+          {{PROJECTS}}
+        </div>
+        {{/if}}
+
+        <!-- CERTIFICATIONS (optional) -->
+        {{#if CERTIFICATIONS}}
+        <div class="section avoid-break">
+          <div class="section-title">{{SECTION_CERTIFICATIONS}}</div>
+          {{CERTIFICATIONS}}
+        </div>
+        {{/if}}
+      </main>
+    </div>
+  </body>
+</html>
