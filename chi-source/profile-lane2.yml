@@ -1,0 +1,135 @@
+# Career-Ops Profile — Chi Chun Yang (Chi Jun)
+# Lane 2: Short-term income / immediate employment in Germany
+#
+# Lane 2 is a bridge — almost any legal, payable work in Frankfurt qualifies.
+# No role is too junior. Prioritise immediate start over fit.
+#
+# Place this file at: config/profile.yml when running Lane 2 searches.
+# Pair with: cv-lane2-shortterm.md (place as cv.md in project root)
+
+candidate:
+  full_name: "Chi Chun Yang"
+  preferred_name: "Chi Jun"
+  email: "7gyang@gmail.com"
+  phone: "+886 955 657 198"        # swap for German number when available
+  location: "Frankfurt am Main, Germany"
+  portfolio_url: "https://www.behance.net/usstudio20ab66"
+
+target_roles:
+  primary:
+    - "Tour Guide"
+    - "Cultural Liaison"
+    - "Client Experience Coordinator"
+    - "Hospitality Staff"
+    - "Front of House / Reception"
+    - "Café / Restaurant Staff"
+    - "Barista"
+    - "Retail Assistant"
+    - "English Tutor / Language Instructor"
+    - "Office Coordinator / Assistant"
+    - "Event Production Assistant"
+    - "Dog Sitter / Pet Sitter"
+    - "Babysitter / Au Pair (part-time)"
+    - "Cleaning / Housekeeping"
+    - "Market Stall / Pop-up Assistant"
+    - "Gallery / Museum Visitor Staff"
+
+  archetypes:
+    - name: "International Tour Guide / Cultural Liaison"
+      level: "Mid"
+      fit: "primary"
+      track: "tourism-hospitality"
+      sell_when: "JD emphasizes guiding international clients, cultural interpretation, itinerary management, multilingual service, or experience design for non-German-speaking guests"
+
+    - name: "Hospitality & Food Service"
+      level: "Entry-Mid"
+      fit: "primary"
+      track: "hospitality"
+      sell_when: "JD is for café, restaurant, hotel, bar, coworking space, or any front-facing service role — including barista, server, front desk, or runner"
+
+    - name: "English Tutor / Language Instructor"
+      level: "Mid"
+      fit: "primary"
+      track: "education"
+      sell_when: "JD is for English teaching, language school instruction, corporate English training, or online tutoring platforms"
+
+    - name: "General Service & Gig Work"
+      level: "Entry"
+      fit: "primary"
+      track: "gig"
+      sell_when: "Role is dog sitting, babysitting, pet care, cleaning, retail, market work, or any other immediately available paid work — no sell strategy needed, just emphasise availability, reliability, and warmth"
+
+    - name: "Event / Production Assistant"
+      level: "Entry-Mid"
+      fit: "secondary"
+      track: "events"
+      sell_when: "JD involves coordinating logistics, supporting event operations, or managing vendor and client communication"
+
+    - name: "Office Coordinator / Administrative Assistant"
+      level: "Entry-Mid"
+      fit: "secondary"
+      track: "admin"
+      sell_when: "JD is for an international company needing organised, English-fluent coordination support — especially in creative, media, or communications sectors"
+
+narrative:
+  headline: "Reliable, warm, and internationally experienced — available immediately in Frankfurt"
+  exit_story: "Based in Frankfurt on a Working Holiday Visa, available to start immediately. Background spans luxury hospitality, high-end international tour guiding across Europe, and 7 years co-running a creative business. Looking for any honest work that fits the schedule while a longer-term career pivot is underway."
+  superpowers:
+    - "Calm and warm with people — trained in luxury hospitality and high-pressure client service"
+    - "Fluent English; native Mandarin — valuable for international or Asian-facing contexts"
+    - "Reliable and organised — running a studio for 7 years means showing up and following through"
+    - "Fast learner, adaptable to any environment — has worked in Taiwan, China, France, and Germany"
+    - "Comfortable working independently or as part of a team"
+
+  proof_points:
+    - name: "Rachel Handmade Tours — International Tour Guide"
+      hero_metric: "3+ years leading bespoke European tours for international clients; solo logistics management across multiple countries"
+      track: "tourism-hospitality"
+    - name: "Regent Taipei Hotel"
+      hero_metric: "Luxury 5-star hospitality; high-standard client service in fast-paced environment"
+      track: "hospitality"
+    - name: "English Tutoring — Freelance"
+      hero_metric: "Tailored one-on-one instruction; cross-cultural communication focus"
+      track: "education"
+    - name: "Us Studio — Co-Founder"
+      hero_metric: "7 years managing a business, teams, and client relationships — reliability and follow-through are baseline, not aspirational"
+      track: "credibility-anchor"
+
+compensation:
+  target_range: "Market rate for Frankfurt — any legal wage accepted"
+  currency: "EUR"
+  minimum: "German minimum wage acceptable"
+  note: >
+    Lane 2 is an income bridge, not a career move. Do not filter or score down
+    roles on compensation. Minimum wage is fine. Evaluate purely on:
+    (1) immediately or near-immediately startable,
+    (2) legally workable under Working Holiday Visa,
+    (3) manageable schedule (part-time and gig work both count).
+    Flag any role that also has Lane 1 upside — e.g. admin at a creative agency,
+    coordination at an events company — so it can be tracked separately.
+
+location:
+  country: "Germany"
+  city: "Frankfurt am Main"
+  timezone: "CET/CEST"
+  visa_status: "Working Holiday Visa — legally permitted to work; verify any per-employer duration limits if applicable"
+  onsite_availability: "Fully available on-site in Frankfurt; open to travel for tour or event roles"
+
+constraints:
+  language: >
+    German is beginner level. For gig and service roles this is usually fine —
+    prioritise roles where English is the working language, where multilingual
+    service is valued, or where the work is physical/practical enough that
+    language is not a barrier (dog sitting, cleaning, market work, etc.).
+  avoid:
+    - Roles legally requiring German language certification
+    - Anything requiring a German driving licence (unless she has one)
+
+evaluation_notes: >
+  For ALL Lane 2 roles, apply minimal scoring thresholds. This is not a career
+  filter — it is a practicality filter. The three questions are:
+  (1) Can she legally do this on a Working Holiday Visa?
+  (2) Can she start soon?
+  (3) Is it in or near Frankfurt?
+  If yes to all three: recommend it. Skip the A-F rubric for pure gig roles.
+  Reserve fuller evaluation only for roles with genuine Lane 1 crossover potential.

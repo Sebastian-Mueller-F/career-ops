@@ -1,0 +1,139 @@
+# Career-Ops Profile — Chi Chun Yang (Chi Jun)
+# Place this file at: config/profile.yml
+
+identity:
+  name: Chi Chun Yang
+  preferred_name: Chi Jun
+  email: 7gyang@gmail.com
+  phone: "+886 955 657 198"
+  location: Frankfurt am Main, Germany
+  visa_status: Working Holiday Visa (Germany)
+  nationality: Taiwanese
+  portfolio: https://www.behance.net/usstudio20ab66
+
+languages:
+  - language: Mandarin
+    level: Native
+  - language: English
+    level: C1/C2 (Fluent)
+  - language: French
+    level: Basic
+  - language: German
+    level: Beginner (actively learning)
+
+career_lanes:
+  # LANE 1 — Long-term / Strategic
+  long_term:
+    description: >
+      Roles at the intersection of creative project management, brand strategy,
+      business operations, or organizational/business psychology. Open to further
+      study (MSc Business Psychology, Project Management certifications) alongside
+      employment. Target: Frankfurt area, with openness to broader Germany,
+      Switzerland, Denmark, or Portugal.
+    target_titles:
+      - Project Manager
+      - Creative Project Manager
+      - Producer / Senior Producer
+      - Brand Manager
+      - Marketing Manager
+      - Communications Manager
+      - Operations Manager
+      - Account Manager (creative or agency)
+      - Strategy & Partnerships
+    target_sectors:
+      - Creative agencies & production companies
+      - Media & entertainment
+      - Marketing & branding firms
+      - Corporate communications
+      - Cultural institutions / NGOs
+      - EdTech / children's content
+    salary_expectation: "Market rate for Frankfurt (research per role)"
+    work_arrangement: Hybrid or on-site preferred; remote considered
+
+  # LANE 2 — Short-term / Income-generating
+  short_term:
+    description: >
+      Any sensible job in Germany that generates income now while the long-term
+      search progresses. Leverages existing skills in communication, logistics,
+      hospitality, tutoring, or creative freelancing. No minimum salary threshold
+      — stability and legal working rights are the priority.
+    target_titles:
+      - Office Assistant / Coordinator
+      - Hospitality / Front of House
+      - English Tutor / Language Instructor
+      - Tour Guide (cultural / city experiences)
+      - Creative Freelancer (animation, video editing)
+      - Administrative Assistant
+      - Customer Service Representative (English-language)
+      - Event Coordinator / Production Assistant
+    target_sectors:
+      - Hotels & hospitality
+      - Language schools / tutoring platforms
+      - Event management companies
+      - International companies with English-speaking environments
+      - Restaurants & tourism
+      - Coworking spaces / cultural venues
+
+background_summary: >
+  Chi Jun is a creative operations professional with 7+ years of experience
+  co-founding and running Us Studio (Taipei), a 3D/2D animation studio that
+  produced content for Taiwan Public Television and YouTube channels with
+  millions of viewers. Her background spans end-to-end production management,
+  cross-functional team leadership, business development, client liaison, and
+  procurement. She has worked in Taiwan, China, and France, and brings strong
+  cross-cultural communication skills and genuine fluency in English. She is
+  currently on a Working Holiday Visa in Germany, based in Frankfurt, seeking
+  both immediate income-generating work and a strategic long-term career pivot.
+
+key_strengths:
+  - End-to-end project management (proven at studio scale)
+  - Cross-cultural communication and stakeholder liaison
+  - Managing teams (up to 10 people) under tight deadlines
+  - Business development and client acquisition
+  - Procurement and vendor negotiation
+  - High EQ and adaptive problem-solving under pressure
+  - Strong visual and brand sensibility
+
+proof_points:
+  - "Co-founded and operated Us Studio from 2018; delivered content for Taiwan Public Television"
+  - "Led production achieving 2.1M views for YouTube channel with 1.56M subscribers"
+  - "Produced 12-episode 3D series in 6 months managing cross-functional team of 10"
+  - "Worked as a private international tour guide in Paris, resolving complex logistical challenges for high-end clients"
+  - "Bachelor's degree from Ming Chuan University holds H+ status in Germany's anabin database (fully recognized)"
+
+credentials:
+  education:
+    - degree: Bachelor of Arts — Digital Media Design
+      institution: Ming Chuan University (銘傳大學)
+      location: Taipei, Taiwan
+      year: 2018
+      germany_recognition: "H+ in anabin database — fully recognized without additional evaluation"
+  certifications: []  # Add PMP, CAPM, or others as acquired
+
+preferences:
+  avoid:
+    - Roles requiring native-level German (short-term exception: basic German is fine for entry-level)
+    - Pure technical roles (software engineering, data science)
+    - Clinical or patient-facing roles
+  prioritize:
+    - English-speaking or international work environments
+    - Creative, media, or communications contexts
+    - Roles with growth potential into management or strategy
+    - Organizations with genuine interest in Asian markets or cross-cultural work
+
+evaluation_weights:
+  # Customize these weights for career-ops scoring
+  role_fit: 0.25
+  language_accessibility: 0.20       # English-friendly environment is critical
+  growth_trajectory: 0.20
+  compensation: 0.15
+  location_logistics: 0.10
+  cultural_fit: 0.10
+
+notes: >
+  Chi Jun is in a dual-track search. When evaluating a role, always flag which
+  lane it belongs to (LANE 1: long-term strategic, LANE 2: short-term income).
+  For Lane 2 roles, relax scoring thresholds significantly — stability and legal
+  employment take priority over career fit. For Lane 1 roles, apply full
+  evaluation rigor. German language barrier is a key constraint: prioritize
+  roles at international companies or English-language contexts.

@@ -1,0 +1,494 @@
+# Career-Ops Portal Scanner — Chi Chun Yang (Chi Jun)
+# Lane 2: Short-term income / gig & service work in Frankfurt
+#
+# Place this file at: portals.yml in the project root when running Lane 2 scans.
+#
+# IMPORTANT NOTES FOR THIS PROFILE:
+# - This is a bridge job search. Skip the A-F scoring rubric for pure gig roles.
+# - Three questions only: (1) legal on Working Holiday Visa? (2) near Frankfurt? (3) start soon?
+# - Sections marked [MANUAL] cannot be auto-scanned — Chi Jun should check these directly.
+# - Language: queries cover English, German, and bilingual postings.
+#   German-only results should be flagged with a note to translate before applying.
+
+# ---------------------------------------------------------------------------
+# TITLE FILTER
+# ---------------------------------------------------------------------------
+# For Lane 2, we filter IN broadly and filter OUT only hard blockers.
+# No seniority minimum — junior and entry-level roles are fine.
+
+title_filter:
+  positive:
+    # -- Hospitality & Food Service --
+    - "Barista"
+    - "Café"
+    - "Cafe"
+    - "Server"
+    - "Kellner"
+    - "Servicekraft"
+    - "Waitress"
+    - "Waiter"
+    - "Restaurant"
+    - "Front Desk"
+    - "Rezeption"
+    - "Receptionist"
+    - "Hotel"
+    - "Hospitality"
+    - "Gastro"
+    - "Gastronomie"
+    # -- Tourism & Guiding --
+    - "Tour Guide"
+    - "Tourguide"
+    - "Guide"
+    - "Reiseleiter"
+    - "City Tour"
+    - "Cultural"
+    - "Experience Host"
+    - "Activity Host"
+    # -- Pet & Child Care --
+    - "Dog Sitter"
+    - "Hundesitter"
+    - "Hundebetreuung"
+    - "Pet Sitter"
+    - "Tierbetreuung"
+    - "Babysitter"
+    - "Kinderbetreuung"
+    - "Nanny"
+    - "Au Pair"
+    # -- Tutoring & Teaching --
+    - "English Tutor"
+    - "Tutor"
+    - "Nachhilfelehrer"
+    - "Sprachlehrer"
+    - "Language Instructor"
+    - "English Teacher"
+    - "Englischlehrer"
+    # -- Events & Coordination --
+    - "Event Assistant"
+    - "Event Staff"
+    - "Eventhelfer"
+    - "Production Assistant"
+    - "Coordinator"
+    - "Veranstaltung"
+    # -- Retail & General Service --
+    - "Retail Assistant"
+    - "Verkäufer"
+    - "Aushilfe"
+    - "Minijob"
+    - "450 Euro"
+    - "Teilzeit"
+    - "Part-time"
+    - "Werkstudent"
+    # -- Office & Admin --
+    - "Office Assistant"
+    - "Büroassistenz"
+    - "Administrative Assistant"
+    - "Coordinator"
+    # -- Cleaning & Household --
+    - "Reinigungskraft"
+    - "Haushaltshilfe"
+    - "Cleaning"
+    - "Housekeeping"
+    # -- Delivery & Logistics (fallback) --
+    - "Delivery"
+    - "Kurier"
+    - "Fahrradkurier"
+
+  negative:
+    # Hard blockers — roles she cannot do
+    - "Deutsch C2 erforderlich"
+    - "Muttersprachler Deutsch"
+    - "Führerschein Klasse B erforderlich"       # driving licence required
+    - "Facharzt"
+    - "Rechtsanwalt"
+    - "Steuerberater"
+    - "Ingenieur (Bachelor)"                     # engineering degree required
+    - "Pflegefachkraft"                          # licensed nursing
+    - "Vollzeit only"                            # if she needs flexibility
+    # Soft blockers — deprioritise but don't hard-exclude
+    - "nur Deutsch"
+    - "Deutschkenntnisse zwingend erforderlich"
+
+  seniority_note: >
+    No seniority filter for Lane 2. Junior, entry-level, Minijob, Aushilfe,
+    450-Euro-Basis, and Werkstudent roles are all valid targets.
+
+# ---------------------------------------------------------------------------
+# SEARCH QUERIES
+# ---------------------------------------------------------------------------
+# Organised by role type. Each query targets a specific platform.
+# [AUTO] = career-ops can scan this. [MANUAL] = Chi Jun checks directly.
+
+search_queries:
+
+  # -- TOUR GUIDE --
+
+  - name: "GetYourGuide — Tour Guide Frankfurt [AUTO]"
+    query: 'site:getyourguide.com "Frankfurt" "guide" OR "host" OR "experience"'
+    platform: GetYourGuide
+    role_type: tour-guide
+    language: English
+    skip_scoring: true
+    enabled: true
+
+  - name: "Indeed.de — Tour Guide Frankfurt English [AUTO]"
+    query: 'site:de.indeed.com "tour guide" OR "city guide" OR "experience host" Frankfurt English'
+    platform: Indeed.de
+    role_type: tour-guide
+    language: English+German
+    enabled: true
+
+  - name: "LinkedIn — Tour Guide Frankfurt [AUTO]"
+    query: 'site:linkedin.com/jobs "tour guide" OR "Reiseleiter" OR "city guide" Frankfurt'
+    platform: LinkedIn
+    role_type: tour-guide
+    language: English+German
+    enabled: true
+
+  - name: "Viator — Experience Host Frankfurt [AUTO]"
+    query: 'site:viator.com "Frankfurt" "guide" OR "host" OR "experience"'
+    platform: Viator
+    role_type: tour-guide
+    language: English
+    skip_scoring: true
+    enabled: true
+
+  # -- HOSPITALITY & CAFÉ --
+
+  - name: "Indeed.de — Barista / Café Frankfurt [AUTO]"
+    query: 'site:de.indeed.com "Barista" OR "Café" OR "café staff" Frankfurt English OR international'
+    platform: Indeed.de
+    role_type: hospitality
+    language: English+German
+    skip_scoring: true
+    enabled: true
+
+  - name: "StepStone — Gastro / Servicekraft Frankfurt [AUTO]"
+    query: 'site:stepstone.de "Servicekraft" OR "Kellner" OR "Barista" OR "Gastro" Frankfurt'
+    platform: StepStone.de
+    role_type: hospitality
+    language: German
+    translation_note: "German postings — translate before applying"
+    skip_scoring: true
+    enabled: true
+
+  - name: "LinkedIn — Hotel / Front Desk Frankfurt [AUTO]"
+    query: 'site:linkedin.com/jobs "front desk" OR "receptionist" OR "hotel staff" Frankfurt English'
+    platform: LinkedIn
+    role_type: hospitality
+    language: English
+    enabled: true
+
+  - name: "Indeed.de — Hotel Rezeption Frankfurt [AUTO]"
+    query: 'site:de.indeed.com "Rezeption" OR "Rezeptionist" OR "Front Office" Frankfurt'
+    platform: Indeed.de
+    role_type: hospitality
+    language: German
+    translation_note: "German postings — translate before applying"
+    skip_scoring: true
+    enabled: true
+
+  # -- PET SITTING --
+
+  - name: "Pawshake — Dog Sitter Frankfurt [MANUAL]"
+    query: 'site:pawshake.de Frankfurt Hundesitter OR Tierbetreuung'
+    platform: Pawshake
+    role_type: pet-care
+    language: German+English
+    manual: true
+    manual_note: "Register directly at pawshake.de and create a sitter profile for Frankfurt. Not a standard job application."
+    skip_scoring: true
+    enabled: true
+
+  - name: "Rover — Pet Sitter Frankfurt [MANUAL]"
+    query: 'site:rover.com Frankfurt dog sitter OR pet sitter'
+    platform: Rover
+    role_type: pet-care
+    language: English
+    manual: true
+    manual_note: "Register directly at rover.com as a sitter. Rover operates in Germany."
+    skip_scoring: true
+    enabled: true
+
+  - name: "Kleinanzeigen — Hundesitter Frankfurt [AUTO]"
+    query: 'site:kleinanzeigen.de "Hundesitter" OR "Hundebetreuung" OR "Tierbetreuung" Frankfurt'
+    platform: Kleinanzeigen
+    role_type: pet-care
+    language: German
+    translation_note: "German postings — translate before applying"
+    skip_scoring: true
+    enabled: true
+
+  # -- BABYSITTING & CHILDCARE --
+
+  - name: "Kleinanzeigen — Babysitter Frankfurt [AUTO]"
+    query: 'site:kleinanzeigen.de "Babysitter" OR "Kinderbetreuung" OR "Nanny" Frankfurt'
+    platform: Kleinanzeigen
+    role_type: childcare
+    language: German
+    translation_note: "German postings — translate before applying"
+    skip_scoring: true
+    enabled: true
+
+  - name: "Indeed.de — Babysitter / Nanny Frankfurt English [AUTO]"
+    query: 'site:de.indeed.com "babysitter" OR "nanny" OR "childcare" Frankfurt English OR international'
+    platform: Indeed.de
+    role_type: childcare
+    language: English+German
+    skip_scoring: true
+    enabled: true
+
+  - name: "Care.com Germany — Babysitter Frankfurt [MANUAL]"
+    query: 'site:care.com Frankfurt babysitter OR nanny'
+    platform: Care.com
+    role_type: childcare
+    language: English+German
+    manual: true
+    manual_note: "Register a caregiver profile directly at care.com/de — families post requests rather than standard job listings."
+    skip_scoring: true
+    enabled: true
+
+  # -- ENGLISH TUTORING --
+
+  - name: "Superprof — English Tutor Frankfurt [MANUAL]"
+    query: 'site:superprof.de Frankfurt "English" tutor OR teacher'
+    platform: Superprof
+    role_type: tutoring
+    language: English+German
+    manual: true
+    manual_note: "Create a tutor profile at superprof.de. Students contact tutors directly. Set hourly rate and availability."
+    skip_scoring: true
+    enabled: true
+
+  - name: "italki — Online English Tutor [MANUAL]"
+    query: 'site:italki.com community tutor English'
+    platform: italki
+    role_type: tutoring
+    language: English
+    manual: true
+    manual_note: "Apply as a Community Tutor at italki.com — no teaching certificate required. Online sessions, global students. Can do alongside Frankfurt work."
+    skip_scoring: true
+    enabled: true
+
+  - name: "Indeed.de — English Tutor / Teacher Frankfurt [AUTO]"
+    query: 'site:de.indeed.com "English tutor" OR "English teacher" OR "Englischlehrer" Frankfurt'
+    platform: Indeed.de
+    role_type: tutoring
+    language: English+German
+    enabled: true
+
+  - name: "StepStone — Sprachlehrer English Frankfurt [AUTO]"
+    query: 'site:stepstone.de "Sprachlehrer" OR "Englischlehrer" OR "Nachhilfe Englisch" Frankfurt'
+    platform: StepStone.de
+    role_type: tutoring
+    language: German
+    translation_note: "German postings — translate before applying"
+    enabled: true
+
+  # -- EVENTS & COORDINATION --
+
+  - name: "LinkedIn — Event Staff / Assistant Frankfurt [AUTO]"
+    query: 'site:linkedin.com/jobs "event assistant" OR "event staff" OR "Eventhelfer" Frankfurt English'
+    platform: LinkedIn
+    role_type: events
+    language: English+German
+    enabled: true
+
+  - name: "Indeed.de — Eventhelfer Frankfurt [AUTO]"
+    query: 'site:de.indeed.com "Eventhelfer" OR "Veranstaltungsassistenz" OR "Event Staff" Frankfurt'
+    platform: Indeed.de
+    role_type: events
+    language: German
+    translation_note: "German postings — translate before applying"
+    enabled: true
+
+  # -- OFFICE & ADMIN --
+
+  - name: "LinkedIn — Office Coordinator Frankfurt English [AUTO]"
+    query: 'site:linkedin.com/jobs "office coordinator" OR "office assistant" OR "administrative assistant" Frankfurt English'
+    platform: LinkedIn
+    role_type: admin
+    language: English
+    enabled: true
+
+  - name: "Indeed.de — Büroassistenz / Teilzeit Frankfurt [AUTO]"
+    query: 'site:de.indeed.com "Büroassistenz" OR "Office Assistant" OR "Teilzeit Büro" Frankfurt'
+    platform: Indeed.de
+    role_type: admin
+    language: German
+    translation_note: "German postings — translate before applying"
+    enabled: true
+
+  # -- MINIJOB / AUSHILFE (CATCH-ALL) --
+
+  - name: "Kleinanzeigen — Minijob Frankfurt [AUTO]"
+    query: 'site:kleinanzeigen.de "Minijob" OR "Aushilfe" OR "450 Euro" Frankfurt'
+    platform: Kleinanzeigen
+    role_type: gig-general
+    language: German
+    translation_note: "German postings — translate before applying"
+    skip_scoring: true
+    enabled: true
+
+  - name: "Indeed.de — Minijob Frankfurt English-friendly [AUTO]"
+    query: 'site:de.indeed.com "Minijob" OR "Aushilfe" Frankfurt "English" OR "international"'
+    platform: Indeed.de
+    role_type: gig-general
+    language: German+English
+    skip_scoring: true
+    enabled: true
+
+  - name: "Workaway — Frankfurt region [MANUAL]"
+    query: 'site:workaway.info Frankfurt OR "Rhein-Main" Germany'
+    platform: Workaway
+    role_type: gig-general
+    language: English
+    manual: true
+    manual_note: "Workaway offers work-exchange arrangements (not cash jobs). Useful if accommodation support is needed alongside other income. Browse directly at workaway.info."
+    skip_scoring: true
+    enabled: true
+
+# ---------------------------------------------------------------------------
+# TRACKED COMPANIES
+# ---------------------------------------------------------------------------
+# For Lane 2, these are platforms and local Frankfurt employers rather than
+# target companies in the traditional sense.
+
+tracked_companies:
+
+  # -- Tour & Experience Platforms --
+
+  - name: GetYourGuide
+    careers_url: https://careers.getyourguide.com
+    scan_method: websearch
+    scan_query: '"GetYourGuide" "guide" OR "host" OR "experience" Frankfurt OR Germany'
+    notes: "Berlin HQ. Also check their supplier/guide registration at getyourguide.com/become-a-supplier"
+    role_type: tour-guide
+    enabled: true
+
+  - name: Viator (TripAdvisor)
+    careers_url: https://www.viator.com/partner
+    scan_method: websearch
+    scan_query: '"Viator" Frankfurt tour guide OR experience host'
+    notes: "[MANUAL] Register as an experience operator at viator.com/partner — not a standard job application."
+    role_type: tour-guide
+    manual: true
+    enabled: true
+
+  # -- Pet Care Platforms --
+
+  - name: Pawshake Germany
+    careers_url: https://www.pawshake.de
+    scan_method: websearch
+    scan_query: '"Pawshake" Frankfurt Hundesitter Profil'
+    notes: "[MANUAL] Create a sitter profile directly on pawshake.de. Set availability, rates, and service area in Frankfurt."
+    role_type: pet-care
+    manual: true
+    skip_scoring: true
+    enabled: true
+
+  - name: Rover Germany
+    careers_url: https://www.rover.com/become-a-sitter
+    scan_method: websearch
+    scan_query: '"Rover" Germany Frankfurt dog sitter registration'
+    notes: "[MANUAL] Register as a sitter at rover.com. Rover operates in Germany — English interface available."
+    role_type: pet-care
+    manual: true
+    skip_scoring: true
+    enabled: true
+
+  # -- Tutoring Platforms --
+
+  - name: Superprof Germany
+    careers_url: https://www.superprof.de
+    scan_method: websearch
+    scan_query: 'site:superprof.de Frankfurt English tutor OR Englischlehrer'
+    notes: "[MANUAL] Create a tutor profile at superprof.de. No application needed — students browse and contact you."
+    role_type: tutoring
+    manual: true
+    skip_scoring: true
+    enabled: true
+
+  - name: italki
+    careers_url: https://www.italki.com/i/teacher-application
+    scan_method: websearch
+    scan_query: '"italki" community tutor English application'
+    notes: "[MANUAL] Apply as Community Tutor (no certificate required) at italki.com. Fully online — good parallel income stream."
+    role_type: tutoring
+    manual: true
+    skip_scoring: true
+    enabled: true
+
+  # -- Frankfurt Hospitality (international/English-friendly venues) --
+
+  - name: Marriott Frankfurt
+    careers_url: https://jobs.marriott.com
+    scan_method: websearch
+    scan_query: '"Marriott" Frankfurt "front desk" OR "hospitality" OR "service" English'
+    notes: "International chain — English working environment likely. Multiple Frankfurt properties."
+    role_type: hospitality
+    enabled: true
+
+  - name: Hilton Frankfurt
+    careers_url: https://jobs.hilton.com
+    scan_method: websearch
+    scan_query: '"Hilton" Frankfurt jobs "front desk" OR "hospitality" OR "service"'
+    notes: "International chain — English working environment likely."
+    role_type: hospitality
+    enabled: true
+
+  - name: Sofitel Frankfurt Opera
+    careers_url: https://careers.accor.com
+    scan_method: websearch
+    scan_query: '"Sofitel Frankfurt" OR "Accor Frankfurt" jobs hospitality English'
+    notes: "Luxury French chain. French/English culture — could suit Chi Jun's profile well."
+    role_type: hospitality
+    enabled: true
+
+  - name: 25hours Hotels Frankfurt
+    careers_url: https://www.25hours-hotels.com/en/jobs
+    scan_method: websearch
+    scan_query: '"25hours" Frankfurt jobs OR careers hospitality'
+    notes: "Design-forward independent hotel group. International, creative culture. English-friendly."
+    role_type: hospitality
+    enabled: true
+
+# ---------------------------------------------------------------------------
+# FRANKFURT-SPECIFIC MANUAL CHANNELS
+# [MANUAL] — Chi Jun should check these directly. Cannot be auto-scanned.
+# ---------------------------------------------------------------------------
+
+manual_channels:
+  - name: "Facebook: Expats in Frankfurt"
+    url: "https://www.facebook.com/groups/expatfrankfurt"
+    notes: "Active expat group. Job leads, gig offers, and local recommendations posted regularly. Search for 'looking for' or 'hiring'."
+    check_frequency: "2-3x per week"
+
+  - name: "Facebook: English Speaking Frankfurt"
+    url: "https://www.facebook.com/groups/englishspeakingfrankfurt"
+    notes: "Large English-speaking community. Good for tutoring leads, informal gig work, and local connections."
+    check_frequency: "2-3x per week"
+
+  - name: "Facebook: Jobs in Frankfurt am Main"
+    url: "https://www.facebook.com/groups/jobsinfrankfurtammain"
+    notes: "Local jobs group. Mix of German and English postings."
+    check_frequency: "Weekly"
+
+  - name: "Kleinanzeigen — Browse directly"
+    url: "https://www.kleinanzeigen.de/stadt/frankfurt-am-main"
+    notes: "eBay Kleinanzeigen is Germany's Craigslist. Many informal gig and Minijob listings not indexed by Indeed. Check 'Dienstleistungen' and 'Jobs' categories."
+    check_frequency: "2x per week"
+
+  - name: "Internations Frankfurt"
+    url: "https://www.internations.org/frankfurt-am-main-expats"
+    notes: "Expat networking community. Occasional job leads and connections to international companies in Frankfurt."
+    check_frequency: "Weekly"
+
+  - name: "Frankfurt Tourist Board — Guide Registration"
+    url: "https://www.frankfurt-tourismus.de"
+    notes: "Check if Frankfurt Tourism offers guide registration or referral programmes for independent city guides. Contact directly."
+    check_frequency: "One-time check"
+
+  - name: "Meetup Frankfurt — International groups"
+    url: "https://www.meetup.com/cities/de/frankfurt"
+    notes: "Not a job board, but international meetups lead to English-language work connections in Frankfurt."
+    check_frequency: "Weekly browse"
