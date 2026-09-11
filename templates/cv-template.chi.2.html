@@ -1,0 +1,400 @@
+<!doctype html>
+<!-- career-ops-template
+name: Chi Terracotta v2
+description: Revised two-column terracotta CV — pt type scale, role-first hierarchy, grouped experience (primary track + further experience), availability callout in the sidebar
+-->
+<html lang="{{LANG}}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{NAME}} — CV</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Jost:wght@300;400;500;600&display=swap');
+
+      /* ── DESIGN TOKENS ────────────────────────────────────────────────────── */
+      :root {
+        --accent:        #b4563f;   /* terracotta — section rules, company line */
+        --accent-light:  #fdf1ec;   /* tag fill                                 */
+        --accent-mid:    #e2cfc7;   /* sidebar rules                            */
+        --accent-ink:    #8a4633;   /* text on accent-light (AA on the tint)    */
+        --text-dark:     #1c1c1c;
+        --text-mid:      #3a3a3a;
+        --text-light:    #8a8a8a;
+        --sidebar-bg:    #f8f4f2;
+        --sidebar-w:     225px;     /* widened from 200 — 200 wrapped badly     */
+        --pad:           26pt;
+        --section-gap:   13pt;
+        --font-display:  'Cormorant Garamond', Georgia, serif;
+        --font-body:     'Jost', 'Helvetica Neue', sans-serif;
+        --page-margin:   0;         /* generate-pdf.mjs reads this; 0 lets the
+                                       sidebar tint bleed to the page edge      */
+      }
+
+      *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+      html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+      /* Type is in pt, not px: 10.5px printed ≈ 8pt, which is under the
+         readable floor. Body 10pt / bullets 9.5pt / labels 7.5pt.            */
+      body {
+        font-family: var(--font-body);
+        font-size: 10pt;
+        line-height: 1.5;
+        color: var(--text-dark);
+        background: #ffffff;
+      }
+
+      /* ── PAGE SHELL ───────────────────────────────────────────────────────── */
+      .page {
+        width: 100%;
+        max-width: {{PAGE_WIDTH}};
+        margin: 0 auto;
+        min-height: 100vh;
+        display: flex;
+      }
+
+      /* ── SIDEBAR ──────────────────────────────────────────────────────────── */
+      .sidebar {
+        width: var(--sidebar-w);
+        min-width: var(--sidebar-w);
+        background: var(--sidebar-bg);
+        padding: var(--pad) 18pt;   /* even inset — no lopsided measure         */
+        display: flex;
+        flex-direction: column;
+        gap: 18pt;
+      }
+
+      /* Photo — 4:5 portrait crop is more forgiving than a square            */
+      .photo-wrap {
+        width: 100%;
+        aspect-ratio: 4 / 5;
+        overflow: hidden;
+        border-radius: 3px;
+      }
+
+      .photo-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 20%;
+        display: block;
+      }
+
+      .sb-label {
+        font-size: 7.5pt;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+        border-bottom: 1px solid var(--accent-mid);
+        padding-bottom: 3pt;
+        margin-bottom: 6pt;
+      }
+
+      .sb-item {
+        font-size: 9pt;
+        line-height: 1.45;
+        color: var(--text-mid);
+      }
+
+      .sb-item strong { font-weight: 500; color: var(--text-dark); }
+
+      .sb-item .muted { color: var(--text-light); }
+
+      .sb-list { list-style: none; display: flex; flex-direction: column; gap: 3pt; }
+
+      .sb-list li {
+        font-size: 9pt;
+        line-height: 1.4;
+        color: var(--text-mid);
+      }
+
+      /* AVAILABILITY CALLOUT — visa / start date is the first thing an
+         employer checks, so it sits above the fold, not in the summary.      */
+      .availability {
+        border: 1px solid var(--accent-mid);
+        background: #fdf6f3;
+        padding: 8pt 9pt;
+      }
+
+      .availability .sb-label { border-bottom: 0; padding-bottom: 0; margin-bottom: 4pt; }
+
+      /* ── MAIN COLUMN ──────────────────────────────────────────────────────── */
+      .main {
+        flex: 1;
+        min-width: 0;
+        padding: var(--pad) var(--pad) var(--pad) 24pt;
+        display: flex;
+        flex-direction: column;
+        gap: var(--section-gap);
+      }
+
+      .cv-name {
+        font-family: var(--font-display);
+        font-weight: 400;          /* 300 prints too thin                      */
+        font-size: 30pt;
+        line-height: 1.05;
+        letter-spacing: 0.01em;
+        margin-bottom: 4pt;
+      }
+
+      .cv-headline {
+        font-size: 10pt;
+        color: #6f6f6f;
+        letter-spacing: 0.02em;
+        margin-bottom: 5pt;
+      }
+
+      .contact-row {
+        font-size: 9pt;
+        color: #6f6f6f;
+      }
+
+      .contact-row .sep { margin: 0 5pt; color: var(--accent-mid); }
+
+      .section-title {
+        font-size: 7.5pt;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--accent);
+        border-bottom: 1px solid #e3dad6;
+        padding-bottom: 3pt;
+        margin-bottom: 8pt;
+      }
+
+      .summary-text {
+        font-size: 10pt;
+        line-height: 1.55;
+        color: var(--text-mid);
+        text-wrap: pretty;
+      }
+
+      /* ── JOB ENTRY — ROLE FIRST ───────────────────────────────────────────── */
+      .job {
+        margin-bottom: 10pt;
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+
+      .job:last-child { margin-bottom: 0; }
+
+      .job-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 10pt;
+      }
+
+      /* The role is what gets scanned — it carries the weight.               */
+      .job-role {
+        font-size: 11pt;
+        font-weight: 600;
+        color: var(--text-dark);
+      }
+
+      /* Company + location on one accent line under the role.               */
+      .job-company {
+        font-size: 9.5pt;
+        color: var(--accent);
+        margin-bottom: 3pt;
+      }
+
+      .job-company .sep { margin: 0 4pt; color: var(--accent-mid); }
+
+      /* Italic is reserved for dates only.                                  */
+      .job-period {
+        font-size: 9pt;
+        color: var(--text-light);
+        font-style: italic;
+        white-space: nowrap;
+      }
+
+      .job ul {
+        padding-left: 12pt;
+        display: flex;
+        flex-direction: column;
+        gap: 2pt;
+      }
+
+      .job li {
+        font-size: 9.5pt;
+        line-height: 1.45;
+        color: var(--text-mid);
+      }
+
+      .job li strong { font-weight: 600; color: var(--text-dark); }
+
+      /* ── EDUCATION ────────────────────────────────────────────────────────── */
+      .edu-item { break-inside: avoid; font-size: 9pt; line-height: 1.45; color: var(--text-mid); }
+      .edu-item + .edu-item { margin-top: 6pt; }
+      .edu-degree { font-weight: 500; color: var(--text-dark); }
+      .edu-meta, .edu-desc { color: var(--text-light); }
+      .edu-desc { margin-top: 3pt; }
+
+      /* ── TAGS ─────────────────────────────────────────────────────────────── */
+      .tag-grid { display: flex; flex-wrap: wrap; gap: 4pt; }
+
+      .tag {
+        font-size: 8.5pt;
+        color: var(--accent-ink);
+        background: var(--accent-light);
+        border: 1px solid #edd5cc;
+        padding: 2pt 6pt;
+      }
+
+      /* ── CERTIFICATIONS (optional) ────────────────────────────────────────── */
+      .cert-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 10pt;
+        font-size: 9.5pt;
+        break-inside: avoid;
+      }
+
+      .cert-item + .cert-item { margin-top: 4pt; }
+      .cert-title { font-weight: 500; color: var(--text-dark); }
+      .cert-org { color: var(--accent); }
+      .cert-year { font-size: 9pt; color: var(--text-light); font-style: italic; white-space: nowrap; }
+
+      /* ── PRINT ────────────────────────────────────────────────────────────── */
+      @media print {
+        body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        .page { min-height: unset; }
+      }
+
+      .avoid-break { break-inside: avoid; page-break-inside: avoid; }
+
+      a { color: inherit; text-decoration: none; }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <!-- ═══════════════════════════════════════════════════════════════════ -->
+      <!-- SIDEBAR                                                             -->
+      <!-- ═══════════════════════════════════════════════════════════════════ -->
+      <aside class="sidebar">
+        <!-- PHOTO — drop photo.jpg in the project root, or omit the block.  -->
+        {{#if PHOTO_PATH}}
+        <div class="photo-wrap">
+          <img
+            src="{{PHOTO_PATH}}"
+            alt="{{NAME}}"
+            onerror="this.parentElement.style.display = 'none'"
+          />
+        </div>
+        {{/if}}
+
+        <!-- AVAILABILITY / WORK PERMIT -->
+        {{#if AVAILABILITY}}
+        <div class="availability avoid-break">
+          <div class="sb-label">{{SECTION_AVAILABILITY}}</div>
+          <div class="sb-item">{{AVAILABILITY}}</div>
+        </div>
+        {{/if}}
+
+        <!-- CORE COMPETENCIES — {{COMPETENCIES}} emits <li> items -->
+        {{#if COMPETENCIES}}
+        <div class="avoid-break">
+          <div class="sb-label">{{SECTION_COMPETENCIES}}</div>
+          <ul class="sb-list">{{COMPETENCIES}}</ul>
+        </div>
+        {{/if}}
+
+        <!-- LANGUAGES — emit: <div class="sb-item"><strong>X</strong> — level</div> -->
+        {{#if LANGUAGES}}
+        <div class="avoid-break">
+          <div class="sb-label">{{SECTION_LANGUAGES}}</div>
+          {{LANGUAGES}}
+        </div>
+        {{/if}}
+
+        <!-- EDUCATION -->
+        {{#if EDUCATION}}
+        <div class="avoid-break">
+          <div class="sb-label">{{SECTION_EDUCATION}}</div>
+          {{EDUCATION}}
+        </div>
+        {{/if}}
+
+        <!-- SKILLS (optional) -->
+        {{#if SKILLS}}
+        <div class="avoid-break">
+          <div class="sb-label">{{SECTION_SKILLS}}</div>
+          {{SKILLS}}
+        </div>
+        {{/if}}
+
+        <!-- PERSONALITY — emits <span class="tag"> items -->
+        {{#if PERSONALITY}}
+        <div class="avoid-break">
+          <div class="sb-label">{{SECTION_PERSONALITY}}</div>
+          <div class="tag-grid">{{PERSONALITY}}</div>
+        </div>
+        {{/if}}
+
+        <!-- INTERESTS (optional) -->
+        {{#if INTERESTS}}
+        <div class="avoid-break">
+          <div class="sb-label">{{SECTION_INTERESTS}}</div>
+          {{INTERESTS}}
+        </div>
+        {{/if}}
+      </aside>
+
+      <!-- ═══════════════════════════════════════════════════════════════════ -->
+      <!-- MAIN COLUMN                                                         -->
+      <!-- ═══════════════════════════════════════════════════════════════════ -->
+      <main class="main">
+        <div class="avoid-break">
+          <div class="cv-name">{{NAME}}</div>
+          <div class="cv-headline">{{HEADLINE}}</div>
+          <div class="contact-row">
+            {{PHONE}}<span class="sep">·</span><a href="mailto:{{EMAIL}}">{{EMAIL}}</a><span class="sep">·</span>{{LOCATION}}
+            {{#if PORTFOLIO_LINK}}<span class="sep">·</span>{{PORTFOLIO_LINK}}{{/if}}
+            {{#if LINKEDIN_LINK}}<span class="sep">·</span>{{LINKEDIN_LINK}}{{/if}}
+          </div>
+        </div>
+
+        <!-- PROFILE — 3 lines max; detail belongs in the bullets.          -->
+        <div class="avoid-break">
+          <div class="section-title">{{SECTION_SUMMARY}}</div>
+          <div class="summary-text">{{SUMMARY_TEXT}}</div>
+        </div>
+
+        <!-- PRIMARY TRACK — the experience relevant to the target role,
+             strictly reverse-chronological. {{EXPERIENCE}} emits .job blocks. -->
+        <div>
+          <div class="section-title">{{SECTION_EXPERIENCE}}</div>
+          {{EXPERIENCE}}
+        </div>
+
+        <!-- FURTHER EXPERIENCE — everything off-track, so it supports the
+             pitch instead of diluting it. Omit when there is none.          -->
+        {{#if EXPERIENCE_FURTHER}}
+        <div>
+          <div class="section-title">{{SECTION_EXPERIENCE_FURTHER}}</div>
+          {{EXPERIENCE_FURTHER}}
+        </div>
+        {{/if}}
+
+        <!-- PROJECTS (optional) -->
+        {{#if PROJECTS}}
+        <div class="avoid-break">
+          <div class="section-title">{{SECTION_PROJECTS}}</div>
+          {{PROJECTS}}
+        </div>
+        {{/if}}
+
+        <!-- CERTIFICATIONS (optional) -->
+        {{#if CERTIFICATIONS}}
+        <div class="avoid-break">
+          <div class="section-title">{{SECTION_CERTIFICATIONS}}</div>
+          {{CERTIFICATIONS}}
+        </div>
+        {{/if}}
+      </main>
+    </div>
+  </body>
+</html>
