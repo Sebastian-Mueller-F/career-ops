@@ -16,9 +16,9 @@
         --text-mid:      #444444;   /* secondary text                             */
         --text-light:    #777777;   /* dates, locations                           */
         --sidebar-bg:    #f9f5f3;   /* warm off-white sidebar                     */
-        --sidebar-w:     210px;     /* sidebar column width                       */
+        --sidebar-w:     200px;     /* sidebar column width                       */
         --page-pad:      28px;      /* outer page padding                         */
-        --section-gap:   18px;      /* gap between sections                       */
+        --section-gap:   14px;      /* gap between sections                       */
         --font-display:  'Cormorant Garamond', Georgia, serif;
         --font-body:     'Jost', 'Helvetica Neue', sans-serif;
       }
@@ -53,7 +53,7 @@
         width: var(--sidebar-w);
         min-width: var(--sidebar-w);
         background: var(--sidebar-bg);
-        padding: var(--page-pad) 18px var(--page-pad) var(--page-pad);
+        padding: var(--page-pad) 16px var(--page-pad) var(--page-pad);
         display: flex;
         flex-direction: column;
         gap: 20px;
@@ -192,13 +192,13 @@
       /* ── SUMMARY ──────────────────────────────────────────────────────────── */
       .summary-text {
         font-size: 10.5px;
-        line-height: 1.75;
+        line-height: 1.65;
         color: var(--text-mid);
       }
 
       /* ── JOB ENTRY ────────────────────────────────────────────────────────── */
       .job {
-        margin-bottom: 12px;
+        margin-bottom: 10px;
         break-inside: avoid;
         page-break-inside: avoid;
       }
@@ -226,19 +226,28 @@
         font-style: italic;
       }
 
-      /* Role title — lighter weight, coral accent separator */
+      /* Role title — lighter weight, coral accent separator.
+         Role and location share one line ("Role · Location") instead of
+         stacking, which saves a full line per job. */
       .job-role {
+        display: inline;
         font-size: 10.5px;
         font-weight: 500;
         color: var(--accent);
-        margin-bottom: 2px;
       }
 
       .job-location {
+        display: inline;
         font-size: 9.5px;
         color: var(--text-light);
         font-style: italic;
-        margin-bottom: 5px;
+      }
+
+      .job-location::before {
+        content: '·';
+        margin: 0 5px 0 1px;
+        font-style: normal;
+        color: var(--accent-mid);
       }
 
       /* Sub-role inside a parent company (e.g. individual clients under Us Studio) */
@@ -278,14 +287,14 @@
 
       .job ul, .sub-job ul {
         padding-left: 14px;
-        margin-top: 4px;
+        margin-top: 3px;
       }
 
       .job li, .sub-job li {
         font-size: 10px;
-        line-height: 1.65;
+        line-height: 1.55;
         color: var(--text-mid);
-        margin-bottom: 3px;
+        margin-bottom: 2px;
       }
 
       .job li strong, .sub-job li strong {
@@ -350,7 +359,18 @@
         border: 1px solid var(--accent-mid);
       }
 
-      /* ── PROJECTS ─────────────────────────────────────────────────────────── */
+      /* Sidebar variant — compact pills that wrap within the narrow column */
+      .sidebar .competencies-grid {
+        gap: 4px;
+      }
+
+      .sidebar .competency-tag {
+        font-size: 9px;
+        line-height: 1.4;
+        padding: 2px 7px;
+      }
+
+      /* ── PROJECTS─────────────────────────────────────────────────────────── */
       .project {
         margin-bottom: 10px;
         break-inside: avoid;
@@ -459,6 +479,14 @@
           />
         </div>
 
+        <!-- CORE COMPETENCIES -->
+        {{#if COMPETENCIES}}
+        <div class="sb-section avoid-break">
+          <div class="sb-label">{{SECTION_COMPETENCIES}}</div>
+          <div class="competencies-grid">{{COMPETENCIES}}</div>
+        </div>
+        {{/if}}
+
         <!-- EDUCATION -->
         <div class="sb-section avoid-break">
           <div class="sb-label">{{SECTION_EDUCATION}}</div>
@@ -466,10 +494,12 @@
         </div>
 
         <!-- LANGUAGES -->
+        {{#if LANGUAGES}}
         <div class="sb-section avoid-break">
           <div class="sb-label">{{SECTION_LANGUAGES}}</div>
           {{LANGUAGES}}
         </div>
+        {{/if}}
 
         <!-- SKILLS -->
         <div class="sb-section avoid-break">
@@ -477,11 +507,13 @@
           {{SKILLS}}
         </div>
 
-        <!-- PERSONALITY (optional — remove block if not used) -->
+        <!-- PERSONALITY -->
+        {{#if PERSONALITY}}
         <div class="sb-section avoid-break">
           <div class="sb-label">{{SECTION_PERSONALITY}}</div>
           {{PERSONALITY}}
         </div>
+        {{/if}}
 
         <!-- INTERESTS -->
         <div class="sb-section avoid-break">
@@ -511,14 +543,6 @@
           <div class="section-title">{{SECTION_SUMMARY}}</div>
           <div class="summary-text">{{SUMMARY_TEXT}}</div>
         </div>
-
-        <!-- CORE COMPETENCIES (optional) -->
-        {{#if COMPETENCIES}}
-        <div class="section avoid-break">
-          <div class="section-title">{{SECTION_COMPETENCIES}}</div>
-          <div class="competencies-grid">{{COMPETENCIES}}</div>
-        </div>
-        {{/if}}
 
         <!-- WORK EXPERIENCE -->
         <div class="section">
