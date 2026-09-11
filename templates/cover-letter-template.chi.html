@@ -1,0 +1,284 @@
+<!doctype html>
+<!-- career-ops-template
+name: Chi Terracotta Letter
+description: One-page cover letter matching the Chi Terracotta CV — tinted header band, serif name, signature block pinned to the page bottom
+-->
+<html lang="{{LANG}}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{NAME}} — {{DOC_LABEL}}</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Jost:wght@300;400;500;600&display=swap');
+
+      /* ── DESIGN TOKENS ────────────────────────────────────────────────────── */
+      :root {
+        --accent:        #b4563f;   /* terracotta — labels, rules               */
+        --accent-light:  #fdf6f3;
+        --accent-mid:    #e2cfc7;
+        --text-dark:     #1c1c1c;
+        --text-body:     #2e2e2e;
+        --text-mid:      #3a3a3a;
+        --text-light:    #8a8a8a;
+        --band-bg:       #f8f4f2;
+        --page-margin:   0;         /* generate-pdf.mjs reads this; 0 lets the
+                                       header band bleed to the page edge       */
+        --pad-x:         40pt;
+        --font-display:  'Cormorant Garamond', Georgia, serif;
+        --font-body:     'Jost', 'Helvetica Neue', sans-serif;
+      }
+
+      *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+      html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+      body {
+        font-family: var(--font-body);
+        font-size: 10.5pt;
+        line-height: 1.55;
+        color: var(--text-dark);
+        background: #ffffff;
+      }
+
+      /* ── PAGE SHELL ───────────────────────────────────────────────────────── */
+      .page {
+        width: 100%;
+        max-width: {{PAGE_WIDTH}};
+        margin: 0 auto;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* ── HEADER BAND ──────────────────────────────────────────────────────── */
+      .letter-head {
+        background: var(--band-bg);
+        border-bottom: 1px solid var(--accent-mid);
+        padding: 30pt var(--pad-x) 22pt;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 24pt;
+      }
+
+      .cv-name {
+        font-family: var(--font-display);
+        font-weight: 400;
+        font-size: 30pt;
+        line-height: 1.05;
+        letter-spacing: 0.01em;
+        margin-bottom: 4pt;
+      }
+
+      .cv-headline {
+        font-size: 10pt;
+        color: #6f6f6f;
+        letter-spacing: 0.02em;
+      }
+
+      .contact-block {
+        font-size: 9pt;
+        color: #6f6f6f;
+        line-height: 1.6;
+        text-align: right;
+        white-space: nowrap;
+      }
+
+      /* ── BODY ─────────────────────────────────────────────────────────────── */
+      .letter-body {
+        flex: 1;
+        padding: 26pt var(--pad-x) 34pt;
+        display: flex;
+        flex-direction: column;
+        gap: 14pt;
+      }
+
+      /* Recipient + date */
+      .address-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 24pt;
+      }
+
+      .recipient {
+        font-size: 10pt;
+        line-height: 1.5;
+        color: var(--text-mid);
+      }
+
+      .recipient strong {
+        display: block;
+        font-weight: 500;
+        color: var(--text-dark);
+      }
+
+      .letter-date {
+        font-size: 9.5pt;
+        color: var(--text-light);
+        white-space: nowrap;
+      }
+
+      /* Subject line */
+      .subject-label {
+        font-size: 7.5pt;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 5pt;
+      }
+
+      .subject-line {
+        font-family: var(--font-display);
+        font-size: 17pt;
+        line-height: 1.25;
+        color: var(--text-dark);
+      }
+
+      /* Prose — {{LETTER_BODY}} emits one <p> per paragraph */
+      .prose {
+        display: flex;
+        flex-direction: column;
+        gap: 9pt;
+        max-width: 34em;          /* keeps the measure readable, ~75 chars      */
+        font-size: 10.5pt;
+        line-height: 1.6;
+        color: var(--text-body);
+      }
+
+      .prose p { text-wrap: pretty; orphans: 3; widows: 3; }
+
+      /* Optional highlight strip (availability / visa / start date) */
+      .callout {
+        border: 1px solid var(--accent-mid);
+        background: var(--accent-light);
+        padding: 8pt 10pt;
+        font-size: 9.5pt;
+        line-height: 1.45;
+        color: var(--text-mid);
+        max-width: 34em;
+      }
+
+      .callout-label {
+        font-size: 7.5pt;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 3pt;
+      }
+
+      /* ── SIGNATURE ────────────────────────────────────────────────────────── */
+      .sign-off {
+        margin-top: auto;          /* pins the block to the bottom of the page  */
+        padding-top: 12pt;
+        display: flex;
+        flex-direction: column;
+        gap: 3pt;
+        break-inside: avoid;
+      }
+
+      .signature-name {
+        font-family: var(--font-display);
+        font-size: 19pt;
+        color: var(--text-dark);
+      }
+
+      /* Scanned signature image, if one is supplied */
+      .signature-img {
+        max-height: 40pt;
+        margin-bottom: 2pt;
+      }
+
+      .sign-rule {
+        width: 120pt;
+        border-top: 1px solid var(--accent-mid);
+      }
+
+      .enclosure {
+        font-size: 8.5pt;
+        color: var(--text-light);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      /* ── PRINT ────────────────────────────────────────────────────────────── */
+      @media print {
+        body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        .page { min-height: unset; }
+      }
+
+      a { color: inherit; text-decoration: none; }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <!-- ═══════════════════════════════════════════════════════════════════ -->
+      <!-- HEADER BAND — mirrors the CV header so the pair reads as one set    -->
+      <!-- ═══════════════════════════════════════════════════════════════════ -->
+      <header class="letter-head">
+        <div>
+          <div class="cv-name">{{NAME}}</div>
+          <div class="cv-headline">{{HEADLINE}}</div>
+        </div>
+        <div class="contact-block">
+          {{PHONE}}<br />
+          <a href="mailto:{{EMAIL}}">{{EMAIL}}</a><br />
+          {{LOCATION}}
+        </div>
+      </header>
+
+      <div class="letter-body">
+        <!-- RECIPIENT + DATE -->
+        <div class="address-row">
+          <div class="recipient">
+            <strong>{{COMPANY}}</strong>
+            {{#if CONTACT_PERSON}}<div>{{CONTACT_PERSON}}</div>{{/if}}
+            {{#if COMPANY_ADDRESS}}{{COMPANY_ADDRESS}}{{/if}}
+          </div>
+          <div class="letter-date">{{LETTER_PLACE}}, {{LETTER_DATE}}</div>
+        </div>
+
+        <!-- SUBJECT -->
+        <div>
+          <div class="subject-label">{{SECTION_APPLICATION}}</div>
+          <div class="subject-line">{{SUBJECT}}</div>
+        </div>
+
+        <!-- LETTER BODY
+             {{LETTER_BODY}} must emit <p>…</p> per paragraph, salutation and
+             closing line included. Keep to 4 paragraphs so the signature
+             block stays on page one.                                        -->
+        <div class="prose">
+          {{SALUTATION}}
+          {{LETTER_BODY}}
+          {{CLOSING}}
+        </div>
+
+        <!-- OPTIONAL CALLOUT (visa / availability / start date) -->
+        {{#if CALLOUT}}
+        <div class="callout">
+          <div class="callout-label">{{SECTION_AVAILABILITY}}</div>
+          {{CALLOUT}}
+        </div>
+        {{/if}}
+
+        <!-- SIGNATURE -->
+        <div class="sign-off">
+          {{#if SIGNATURE_IMAGE}}
+          <img
+            class="signature-img"
+            src="{{SIGNATURE_IMAGE}}"
+            alt="{{NAME}}"
+            onerror="this.style.display = 'none'"
+          />
+          {{/if}}
+          <div class="signature-name">{{NAME}}</div>
+          <div class="sign-rule"></div>
+          {{#if ENCLOSURE}}<div class="enclosure">{{ENCLOSURE}}</div>{{/if}}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
