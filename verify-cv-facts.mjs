@@ -16,10 +16,22 @@ import { existsSync, readFileSync } from 'fs';
 import { isAbsolute, join, dirname, basename } from 'path';
 import { fileURLToPath } from 'url';
 import { isMainModule } from './lib/is-main-module.mjs';
+import { getCareerOpsRoot } from './path-resolver.mjs';
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const DEFAULT_SOURCES = ['cv.md', 'article-digest.md'];
-const DEFAULT_CONFIG = join(ROOT, 'config', 'cv-facts.json');
+// Both DEFAULT_SOURCES entries and cv-facts.json are User Layer files (they
+// live wherever the candidate's real cv.md does) — an external data root
+// (CAREER_OPS_ROOT/CAREER_OPS_DATA_DIR, or a .career-ops-data marker) can put
+// that anywhere outside this checkout. getCareerOpsRoot() resolves it the
+// same way every other script does; with none of those set it falls back to
+// the checkout root, so this is a no-op change for the common in-repo case
+// (including the test suite, which relies on exactly that fallback). Without
+// this, runCli()'s un-overridden defaults silently read no source text at
+// all for an external-data-root workspace, and the fact gate either blocks a
+// truthful CV (nothing to verify against) or passes a fabricated one
+// (whichever claims happen not to match the extraction patterns).
+const DEFAULT_CONFIG = join(getCareerOpsRoot(), 'config', 'cv-facts.json');
 const TOOL_PROSE_WORDS = new Set([
   'a', 'an', 'and', 'at', 'built', 'by', 'containerized', 'deployment',
   'deployments', 'delivery', 'diagnosing', 'efficiency', 'feedback', 'for', 'from', 'improve',
@@ -779,7 +791,12 @@ function sourceContainsFact(sourceText, value) {
 export function verifyFacts(targetText, {
   sourcePaths = DEFAULT_SOURCES,
   configPath = DEFAULT_CONFIG,
-  cwd = process.cwd(),
+  // See the DEFAULT_CONFIG comment above: relative sourcePaths (cv.md,
+  // article-digest.md) are User Layer files that may live outside the
+  // checkout, so the base for resolving them is getCareerOpsRoot(), not
+  // process.cwd() — a no-op for the common in-repo/test-suite case, where
+  // they coincide.
+  cwd = getCareerOpsRoot(),
 } = {}) {
   const sourceText = sourcePaths.map(path => readIfExists(resolveInputPath(path, cwd))).join('\n');
   const { missing: configMissing, config } = loadFactConfig(resolveInputPath(configPath, cwd));

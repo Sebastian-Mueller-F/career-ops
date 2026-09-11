@@ -69,7 +69,17 @@ function refreshRootCache() {
   if (__rootCache.key !== key) {
     // Always re-derive: falling back to the import-time const when the variable
     // is unset would hand back the very value the poisoned import froze.
-    const root = resolveWorkspaceRoot(resolveTrackerPath(__dirname));
+    //
+    // Derive from getCareerOpsRoot(), not __dirname (script install dir): a
+    // workspace using an external data root (CAREER_OPS_ROOT/
+    // CAREER_OPS_DATA_DIR, or a .career-ops-data marker) keeps cv.md,
+    // reports/, and output/ outside the career-ops checkout entirely. Before
+    // this fix, this cache — unlike the top-level `workspaceRoot` const above,
+    // which already calls getCareerOpsRoot() — always resolved to __dirname's
+    // own applications.md-less directory, i.e. the checkout root itself, so
+    // assertInsideWorkspace() rejected every legitimate write into that
+    // external data root as "escaping the tracker workspace".
+    const root = resolveWorkspaceRoot(resolveTrackerPath(getCareerOpsRoot()));
     __rootCache = { key, root, canonical: realpathSync(root) };
   }
   return __rootCache;
