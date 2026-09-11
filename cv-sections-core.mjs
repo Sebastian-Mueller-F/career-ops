@@ -87,7 +87,19 @@
 // tests/cv-optional-sections.test.mjs.
 
 // HTML: `<!-- SECTION NAME -->`, all-caps. LaTeX: `%%%%  Name  %%%%` banners.
-const HTML_BOUNDARY = String.raw`(?=<!--\s+[A-Z][A-Z ]*-->|$)`;
+//
+// A custom template's own doc comments don't always keep to the all-caps-only
+// marker shape (e.g. `<!-- PROJECTS (optional) -->`, `<!-- NAME / HEADLINE -->`).
+// When that happens the lazy match for an EARLIER empty section can't stop at
+// that near marker and keeps searching, potentially past a later section's
+// content and into markup this module must never touch — the closing tag of
+// the section's own enclosing container (`</aside>`, `</main>`, `</body>`,
+// `</html>`). No section's own inner markup legitimately contains one of
+// those four closing tags (they only ever *enclose* a section, never sit
+// inside one), so adding them as an unconditional extra stop is safe: it can
+// only shorten an over-long match, never cut one short inside real content.
+const HTML_STRUCTURAL_GUARD = String.raw`<\/(?:aside|main|body|html)>`;
+const HTML_BOUNDARY = String.raw`(?=<!--\s+[A-Z][A-Z ]*-->|${HTML_STRUCTURAL_GUARD}|$)`;
 const TEX_BOUNDARY = String.raw`(?=%{4,}\s|$)`;
 
 // Marker-only boundaries for Skills — the same marker shapes as the shared

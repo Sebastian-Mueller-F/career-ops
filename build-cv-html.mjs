@@ -39,6 +39,14 @@ const DATA_ROOT = getCareerOpsRoot();
 const TEMPLATE_PATH = resolve(__dirname, 'templates', 'cv-template.html');
 const PLACEHOLDER_RE = /\{\{[A-Z_]+\}\}/g;
 const CONTACT_ROW_RE = /<div class="contact-row">[\s\S]*?<\/div>/;
+// `{{#if PLACEHOLDER}}...{{/if}}` — a Handlebars-shaped optional-block marker
+// some templates use inline (as an alternative to the `<!-- SECTION -->`
+// comment markers stripEmptySections() reads). Nothing else in this file
+// implements it, so without this pass the markers themselves — including on
+// a *populated* section — would reach the rendered PDF as literal text. Not
+// used by any shipped template, but harmless where absent (the regex simply
+// finds no matches).
+const IF_BLOCK_RE = /\{\{#if\s+([A-Z_]+)\}\}([\s\S]*?)\{\{\/if\}\}/g;
 
 const PAGE_WIDTHS = { letter: '8.5in', a4: '210mm' };
 const PHOTO_MIME_BY_EXT = new Map([
@@ -61,6 +69,13 @@ const DEFAULT_SECTION_TITLES = {
   awards: 'Awards & Honors',
   interests: 'Interests',
   skills: 'Skills',
+  // Sidebar-only sections used by the two-column cv-template.html variant
+  // (a candidate-photo sidebar, a Languages list, a Personality list). Other
+  // shipped templates simply have no {{SECTION_LANGUAGES}}/{{SECTION_PERSONALITY}}
+  // placeholder, so these titles are computed unconditionally but only ever
+  // reach the page when the active template has somewhere to put them.
+  languages: 'Languages',
+  personality: 'Personality',
 };
 
 // Escape user text for HTML text/attribute context. Covers the five characters
@@ -555,6 +570,30 @@ function buildInterests(items) {
     .join(', ');
 }
 
+// Sidebar list rendering for the two-column template's Languages/Personality
+// blocks: a simple `<ul class="sb-list">` of items, matching the `.sb-list`
+// CSS that template already ships. Kept as two thin wrappers around one
+// shared renderer (rather than one shared exported builder) so Languages and
+// Personality can diverge later without one section's markup leaking into
+// the other — same tradeoff buildCertifications()/buildAwards() make.
+function buildSbList(items) {
+  if (!Array.isArray(items) || items.length === 0) return '';
+  const lis = items
+    .filter(Boolean)
+    .map(item => `        <li>${escapeHtml(String(item))}</li>`)
+    .join('\n');
+  if (!lis) return '';
+  return `<ul class="sb-list">\n${lis}\n      </ul>`;
+}
+
+function buildLanguages(items) {
+  return buildSbList(items);
+}
+
+function buildPersonality(items) {
+  return buildSbList(items);
+}
+
 function buildSkills(categories, partial) {
   if (!Array.isArray(categories) || categories.length === 0) return '';
   if (!partial) {
@@ -635,6 +674,20 @@ function renderReport(payload, partials) {
     LANG: escapeHtml(payload.lang || 'en'),
     PAGE_WIDTH: pageWidth,
     NAME: escapeHtml(candidate.name || ''),
+    // Sidebar-only fields for the two-column cv-template.html variant. HEADLINE
+    // is a real, visible placeholder there ({{NAME}}'s tagline). PHOTO_PATH is
+    // NOT a live placeholder in any shipped template — that template's own
+    // doc comment mentions it as prose, and the unresolved-placeholder scan
+    // matches inside HTML comments too, so it must resolve to something even
+    // though the value itself is never rendered. See writeAndReport()'s
+    // sibling-photo.jpg write for how that template's hardcoded
+    // `src="photo.jpg"` actually gets a real photo without editing the template.
+    HEADLINE: escapeHtml(payload.headline || ''),
+    PHOTO_PATH: 'photo.jpg',
+    SECTION_LANGUAGES: escapeHtml(sectionTitles.languages),
+    LANGUAGES: buildLanguages(payload.languages),
+    SECTION_PERSONALITY: escapeHtml(sectionTitles.personality),
+    PERSONALITY: buildPersonality(payload.personality),
     SECTION_SUMMARY: escapeHtml(sectionTitles.summary),
     SUMMARY_TEXT: escapeHtml(payload.summary || ''),
     SECTION_COMPETENCIES: escapeHtml(sectionTitles.competencies),
@@ -675,6 +728,14 @@ function renderHtml(template, payload, templatePath) {
   // an absent one leaves no bare header behind. See cv-sections-core.mjs.
   html = stripEmptySections(html, payload, 'html');
 
+  // Resolve `{{#if PLACEHOLDER}}...{{/if}}` blocks: keep the inner markup
+  // (still carrying its own {{PLACEHOLDER}} references, filled by the loop
+  // below) when that placeholder's computed value is non-empty, drop the
+  // whole block otherwise. Must run after `substitutions` is built (it reads
+  // those values) and before the plain substitution loop (the loop has no
+  // knowledge of `{{#if}}` syntax and would leave the markers untouched).
+  html = html.replace(IF_BLOCK_RE, (_match, name, inner) => (substitutions[name] ? inner : ''));
+
   for (const [key, value] of Object.entries(substitutions)) {
     html = html.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), () => value);
   }
@@ -699,11 +760,32 @@ function countBullets(payload) {
   return ex.length;
 }
 
+// The two-column cv-template.html variant hardcodes `<img src="photo.jpg">`
+// (a relative path resolved against the *output HTML's own directory* once
+// loaded as file://, not the payload's candidate.photo value) instead of
+// using the {{PHOTO}} mechanism every other shipped template fills. Rather
+// than edit that template, give it what it already expects: write a real
+// "photo.jpg" next to the generated HTML whenever the payload carries a
+// photo. By the time this runs, prepareCandidatePhoto() has already turned a
+// local file path into a data: URL (see main()); a remote https:// photo URL
+// is left alone here since sibling-file placement can't help a template that
+// only knows a relative filename.
+const DATA_URL_RE = /^data:[^;]+;base64,(.+)$/s;
+
+async function writeSiblingPhoto(outDir, candidate) {
+  const photo = candidate && typeof candidate.photo === 'string' ? candidate.photo : '';
+  const match = DATA_URL_RE.exec(photo);
+  if (!match) return;
+  const bytes = Buffer.from(match[1], 'base64');
+  await writeFile(join(outDir, 'photo.jpg'), bytes);
+}
+
 async function writeAndReport(html, absOutput, payload, extra = {}) {
   const { warnings = [], ...rest } = extra;
   const outDir = dirname(absOutput);
   if (!existsSync(outDir)) await mkdir(outDir, { recursive: true });
   await writeFile(absOutput, html, 'utf-8');
+  await writeSiblingPhoto(outDir, payload.candidate);
 
   const fileInfo = await stat(absOutput);
   const report = {
