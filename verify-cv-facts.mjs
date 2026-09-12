@@ -229,6 +229,12 @@ export function stripMarkup(text, { keepLineBreaks = false } = {}) {
   return foldDigits(String(text))
     .replace(/<script\b[^>]*>[\s\S]*?<\/script\b[^>]*>/gi, ' ')
     .replace(/<style\b[^>]*>[\s\S]*?<\/style\b[^>]*>/gi, ' ')
+    // HTML comments are never rendered, so they can never be a candidate claim.
+    // The tag strips below require a letter after `<`, so `<!--` survived them
+    // and template authoring notes were scanned as CV prose: a comment reading
+    // "PROFILE - 3 lines max" was reported as the invented metric "3 lines" and
+    // hard-blocked the PDF.
+    .replace(/<!--[\s\S]*?-->/g, ' ')
     // Only strip things that actually look like tags: `<name …>` or `</name>`.
     // A bare `<` is ordinary prose in these sources (`p<0.001`, `ρ < 0.3`, `<30 min`),
     // and `[^>]` matches newlines — so the old `/<[^>]+>/g` let one stray `<` swallow

@@ -159,7 +159,15 @@ async function prepareCandidatePhoto(candidate) {
     throw new Error(`Unsupported profile photo URL scheme: ${photo.split(':', 1)[0]}`);
   }
 
-  const photoPath = isAbsolute(photo) ? photo : resolve(__dirname, photo);
+  // A relative photo path is a USER file, so it resolves against the data root
+  // first (config/profile.yml -> candidate.photo names it relative to there).
+  // Falling back to __dirname keeps repo-relative photos working for setups
+  // with no separate data root, where getCareerOpsRoot() returns __dirname
+  // anyway and the two candidates are the same path.
+  const photoPath = isAbsolute(photo)
+    ? photo
+    : [resolve(getCareerOpsRoot(), photo), resolve(__dirname, photo)]
+        .find((candidate) => existsSync(candidate)) ?? resolve(getCareerOpsRoot(), photo);
   const mime = PHOTO_MIME_BY_EXT.get(extname(photoPath).toLowerCase());
   if (!mime) {
     throw new Error(`Unsupported profile photo format: ${photo} (expected PNG, JPEG, WebP, or GIF)`);
