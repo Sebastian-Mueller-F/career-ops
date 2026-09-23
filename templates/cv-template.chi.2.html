@@ -262,6 +262,12 @@ description: Revised two-column terracotta CV — pt type scale, role-first hier
       @media print {
         body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         .page { min-height: unset; }
+        /* @page margin is 0, so the columns' own bottom padding (--pad, 26pt
+           = ~35px) is the last thing between the content and the page edge.
+           A CV whose content ended just inside A4 still overran the page box
+           by that padding alone and spilled a near-empty second page. Trailing
+           whitespace above the page edge needs no padding to exist. */
+        .main, .sidebar { padding-bottom: 0; }
       }
 
       .avoid-break { break-inside: avoid; page-break-inside: avoid; }
